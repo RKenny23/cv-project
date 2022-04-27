@@ -1,0 +1,25 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: whitesmoke;
+  margin: 0;
+  font-family: "Inter", sans-serif;
+}
+
+h1 {
+  text-align: center;
+}
+
+form {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  margin: 0 8rem;
+}
+
+input {
+  padding: 0.5rem;
+  margin: 1rem;
+}
