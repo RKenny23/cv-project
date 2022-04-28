@@ -8,18 +8,52 @@ body {
   font-family: "Inter", sans-serif;
 }
 
-h1 {
+h1, h2 {
   text-align: center;
 }
 
 form {
-  text-align: center;
   display: flex;
   flex-direction: column;
-  margin: 0 8rem;
+  margin: 0 auto;
+  width: 200px;
 }
 
 input {
   padding: 0.5rem;
-  margin: 1rem;
+  margin: 1rem auto;
+  width: 200px;
+}
+
+button {
+  width: 80px;
+  margin: 1rem auto;
+  background-color: lightblue;
+  text-align: center;
+}
+
+.name-title {
+  text-align: left;
+  font-size: 4rem;
+  margin: 0;
+}
+
+.preview-page {
+  margin: 2rem auto;
+  padding: 80px 96px;
+  width: 816px;
+  border: 2px solid black;
+}
+
+.edit-btn {
+  margin: 2rem;
+}
+
+.preview-flex {
+  display: flex;
+  align-items: center;
+}
+
+.school-title {
+  text-align: left;
 }
