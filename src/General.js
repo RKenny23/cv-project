@@ -18,13 +18,9 @@ export default class General extends Component {
 
   handleSubmit = (e) => {
     e.preventDefault();
-    this.setState(
-      this.state.editMode === true
-        ? {
-            editMode: false,
-          }
-        : { editMode: true }
-    );
+    this.setState((prevState) => ({
+      editMode: !prevState.editMode,
+    }));
   };
 
   formatNum = (e) => {
