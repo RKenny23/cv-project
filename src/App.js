@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import General from './General';
 import Education from './Education.js';
+import Experience from './Experience';
 
 export default class App extends Component {
   render() {
@@ -11,6 +12,7 @@ export default class App extends Component {
         <div className="preview-page">
           <General />
           <Education />
+          <Experience />
         </div>
       </>
     );

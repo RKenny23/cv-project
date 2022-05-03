@@ -14,7 +14,8 @@ export default class Education extends Component {
         school: 'Great University',
         location: 'Somewhere, U.S.A.',
         degree: 'Web Development',
-        date: 'Sept 2008 - April 2012',
+        startDate: 'Sept 2008',
+        endDate: 'April 2012',
       },
     ],
     editMode: false,
@@ -26,7 +27,7 @@ export default class Education extends Component {
     });
   };
 
-  submitEducation = (e) => {
+  handleSubmit = (e) => {
     e.preventDefault();
     this.setState({
       education: this.state.education.concat({
@@ -34,7 +35,8 @@ export default class Education extends Component {
         school: this.state.school,
         location: this.state.location,
         degree: this.state.degree,
-        date: this.state.startDate + ' - ' + this.state.endDate,
+        startDate: this.state.startDate,
+        endDate: this.state.endDate,
       }),
       school: '',
       location: '',
@@ -52,13 +54,28 @@ export default class Education extends Component {
     }));
   };
 
-  handleRemove = (key) => {
-    const newEdu = this.state.education.filter(
-      (education) => education.id !== key
-    );
+  handleRemove = (id) => {
+    const filtered = this.state.education.filter((edu) => edu.id !== id);
 
     this.setState({
-      education: newEdu,
+      education: filtered,
+    });
+  };
+
+  handleEdit = (id) => {
+    const filtered = this.state.education.filter((edu) => edu.id !== id);
+
+    const selected = this.state.education.find((edu) => edu.id === id);
+
+    this.setState({
+      education: filtered,
+      id: id,
+      school: selected.school,
+      location: selected.location,
+      degree: selected.degree,
+      startDate: selected.startDate,
+      endDate: selected.endDate,
+      editMode: true,
     });
   };
 
@@ -86,13 +103,29 @@ export default class Education extends Component {
         <h1 className="school-title">Education:</h1>
         {education.map((edu) => {
           return (
-            <div key={edu.id} onClick={() => this.handleRemove(edu.id)}>
+            <div key={edu.id} className="preview-flex">
               <div className="school-info">
                 <h2 className="school-title">{edu.school}</h2>
                 <p>{edu.location}</p>
                 <p>{edu.degree}</p>
-                <p>{edu.date}</p>
+                {edu.startDate && (
+                  <p>
+                    {edu.startDate} - {edu.endDate}
+                  </p>
+                )}
               </div>
+              <button
+                className="edit-btn"
+                onClick={() => this.handleEdit(edu.id)}
+              >
+                Edit
+              </button>
+              <button
+                className="edit-btn"
+                onClick={() => this.handleRemove(edu.id)}
+              >
+                Delete
+              </button>
             </div>
           );
         })}
@@ -142,7 +175,7 @@ export default class Education extends Component {
               placeholder="Month &amp; Year"
               onChange={this.handleChange}
             />
-            <button type="submit" onClick={this.submitEducation}>
+            <button type="submit" onClick={this.handleSubmit}>
               Add Education
             </button>
             <button type="button" onClick={this.toggleEdit}>
