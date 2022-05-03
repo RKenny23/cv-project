@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
-import GenPreview from './GenPreview';
 
 export default class General extends Component {
   state = {
-    userName: '',
-    phoneNum: '',
-    email: '',
-    country: '',
-    editMode: true,
+    userName: 'Name',
+    phoneNum: 'Phone',
+    email: 'Email',
+    country: 'Country',
+    editMode: false,
   };
 
   handleChange = (e) => {
@@ -16,7 +15,7 @@ export default class General extends Component {
     });
   };
 
-  handleSubmit = (e) => {
+  toggleEdit = (e) => {
     e.preventDefault();
     this.setState((prevState) => ({
       editMode: !prevState.editMode,
@@ -43,60 +42,66 @@ export default class General extends Component {
   }
 
   render() {
-    const { userName, phoneNum, email, country } = this.state;
-    console.log(this.state);
-
-    if (!this.state.editMode) {
-      return (
-        <GenPreview
-          userName={userName}
-          phoneNum={phoneNum}
-          email={email}
-          country={country}
-          handleEdit={this.handleSubmit}
-        />
-      );
-    }
+    const { userName, phoneNum, email, country, editMode } = this.state;
 
     return (
       <>
-        <h2>General Information</h2>
-        <form onSubmit={this.handleSubmit}>
-          <label for="userName">Name:</label>
-          <input
-            type="text"
-            name="userName"
-            placeholder="Name"
-            value={userName}
-            onChange={this.handleChange}
-          />
-          <label for="userName">Phone:</label>
-          <input
-            type="text"
-            name="phoneNum"
-            placeholder="Phone"
-            value={phoneNum}
-            onChange={this.handleChange}
-            onBlur={this.formatNum}
-          />
-          <label for="userName">Email:</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            value={email}
-            onChange={this.handleChange}
-          />
-          <label for="userName">Country:</label>
-          <input
-            type="country"
-            name="country"
-            placeholder="Country"
-            value={country}
-            onChange={this.handleChange}
-          />
-          <button type="submit">Save</button>
-        </form>
+        <>
+          <div className="preview-flex">
+            <div>
+              <h1 className="name-title">{userName}</h1>
+              <p>{email}</p>
+              <p>{phoneNum}</p>
+              <p>{country}</p>
+            </div>
+            <button className="edit-btn" onClick={this.toggleEdit}>
+              Edit
+            </button>
+          </div>
+        </>
+
+        {editMode && (
+          <>
+            <form>
+              <label htmlFor="userName">Name:</label>
+              <input
+                type="text"
+                name="userName"
+                placeholder="Name"
+                value={userName}
+                onChange={this.handleChange}
+              />
+              <label htmlFor="userName">Phone:</label>
+              <input
+                type="text"
+                name="phoneNum"
+                placeholder="Phone"
+                value={phoneNum}
+                onChange={this.handleChange}
+                onBlur={this.formatNum}
+              />
+              <label htmlFor="userName">Email:</label>
+              <input
+                type="email"
+                name="email"
+                placeholder="Email"
+                value={email}
+                onChange={this.handleChange}
+              />
+              <label htmlFor="userName">Country:</label>
+              <input
+                type="country"
+                name="country"
+                placeholder="Country"
+                value={country}
+                onChange={this.handleChange}
+              />
+              <button type="submit" onClick={this.toggleEdit}>
+                Save
+              </button>
+            </form>
+          </>
+        )}
       </>
     );
   }

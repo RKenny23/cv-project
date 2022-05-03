@@ -8,7 +8,7 @@ export default class App extends Component {
       <>
         <h1>CV Maker with React</h1>
         <hr></hr>
-        <div class="preview-page">
+        <div className="preview-page">
           <General />
           <Education />
         </div>
