@@ -13,8 +13,9 @@ export default class Experience extends Component {
         id: uniqid(),
         company: 'Awesome United',
         title: 'Administrative Liason',
-        tasks: 'Web Development',
-        date: 'June 2012 - Nov 2018',
+        tasks: 'Prepare invoices, reports, memos, letters',
+        startDate: 'June 2012',
+        endDate: 'Nov 2018',
       },
     ],
     editMode: false,
@@ -34,7 +35,8 @@ export default class Experience extends Component {
         company: this.state.company,
         title: this.state.title,
         tasks: this.state.tasks,
-        date: this.state.startDate + ' - ' + this.state.endDate,
+        startDate: this.state.startDate,
+        endDate: this.state.endDate,
       }),
       company: '',
       title: '',
@@ -60,28 +62,69 @@ export default class Experience extends Component {
     });
   };
 
+  handleEdit = (id) => {
+    const filtered = this.state.experience.filter((exp) => exp.id !== id);
+
+    const selected = this.state.experience.find((exp) => exp.id === id);
+
+    this.setState({
+      experience: filtered,
+      id: id,
+      company: selected.company,
+      title: selected.title,
+      tasks: selected.tasks,
+      startDate: selected.startDate,
+      endDate: selected.endDate,
+      editMode: true,
+    });
+  };
+
+  componentDidMount() {
+    this.setState(JSON.parse(localStorage.getItem('formData')));
+  }
+
+  componentDidUpdate() {
+    localStorage.setItem('formData', JSON.stringify(this.state));
+  }
+
   render() {
     const { company, title, tasks, startDate, endDate, experience, editMode } =
       this.state;
 
     return (
       <>
-        <h1 className="school-title">Experience:</h1>
+        <div class="new-section">
+          <h1 className="section-title">Experience:</h1>
+          <button className="add-btn" type="button" onClick={this.toggleEdit}>
+            +
+          </button>
+        </div>
         {experience.map((exp) => {
           return (
-            <div key={exp.id} onClick={() => this.handleRemove(exp.id)}>
+            <div className="preview-flex" key={exp.id}>
               <div className="school-info">
-                <h2 className="school-title">{exp.company}</h2>
+                <h2 id="school-name">{exp.company}</h2>
                 <p>{exp.title}</p>
                 <p>{exp.tasks}</p>
-                <p>{exp.date}</p>
+                <p>
+                  {exp.startDate} - {exp.endDate}
+                </p>
               </div>
+              <button
+                className="edit-btn"
+                onClick={() => this.handleEdit(exp.id)}
+              >
+                Edit
+              </button>
+              <button
+                className="edit-btn"
+                onClick={() => this.handleRemove(exp.id)}
+              >
+                Delete
+              </button>
             </div>
           );
         })}
-        <button className="school-info" type="button" onClick={this.toggleEdit}>
-          Add
-        </button>
 
         {editMode && (
           <form>
@@ -126,7 +169,7 @@ export default class Experience extends Component {
               onChange={this.handleChange}
             />
             <button type="submit" onClick={this.handleSubmit}>
-              Add Education
+              Add Experience
             </button>
             <button type="button" onClick={this.toggleEdit}>
               Close

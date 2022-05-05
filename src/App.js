@@ -7,7 +7,7 @@ export default class App extends Component {
   render() {
     return (
       <>
-        <h1>CV Maker with React</h1>
+        <h1 className="main-title">CV Maker with React</h1>
         <hr></hr>
         <div className="preview-page">
           <General />

@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 
 export default class General extends Component {
   state = {
-    userName: 'Name',
-    phoneNum: 'Phone',
-    email: 'Email',
-    country: 'Country',
+    userName: 'John Smith',
+    email: 'myemail@site.com',
+    phoneNum: '(123) 456-7890',
+    country: 'United States',
     editMode: false,
   };
 
