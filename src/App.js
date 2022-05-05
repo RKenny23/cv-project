@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
-import General from './General';
-import Education from './Education.js';
-import Experience from './Experience';
+import General from './components/General';
+import Education from './components/Education';
+import Experience from './components/Experience';
+import './styles/style.css';
 
 export default class App extends Component {
   render() {
