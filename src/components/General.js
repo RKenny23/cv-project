@@ -1,108 +1,104 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 
-export default class General extends Component {
-  state = {
-    userName: 'John Smith',
-    email: 'myemail@site.com',
-    phoneNum: '(123) 456-7890',
-    country: 'United States',
-    editMode: false,
-  };
+export default function General() {
+  const [generalInfo, setGeneralInfo] = useState({
+    userName: 'Ryan Kenny',
+    email: 'rkenny238@hotmai.com',
+    phoneNum: '(203) 727-7052',
+    country: 'Authorized to work in USA',
+  });
+  const [editMode, setEditMode] = useState(false);
 
-  handleChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setGeneralInfo((prevState) => {
+      let newInfo = { ...prevState, [name]: value };
+      return newInfo;
     });
   };
 
-  toggleEdit = (e) => {
+  function toggleEdit(e) {
     e.preventDefault();
-    this.setState((prevState) => ({
-      editMode: !prevState.editMode,
-    }));
-  };
+    setEditMode((prevState) => !prevState);
+  }
 
-  formatNum = (e) => {
+  function formatNum(e) {
     let nums = e.target.value.split('');
     nums.splice(0, 0, '(');
     nums.splice(4, 0, ') ');
     nums.splice(8, 0, '-');
     const newPhoneNum = nums.join('');
-    this.setState({
+    setGeneralInfo({
+      userName,
+      email,
+      phoneNum,
+      country,
       phoneNum: newPhoneNum,
     });
-  };
-
-  componentDidMount() {
-    this.setState(JSON.parse(localStorage.getItem('formData')));
   }
 
-  componentDidUpdate() {
-    localStorage.setItem('formData', JSON.stringify(this.state));
-  }
+  const { userName, email, phoneNum, country } = generalInfo;
 
-  render() {
-    const { userName, phoneNum, email, country, editMode } = this.state;
-
-    return (
+  return (
+    <>
       <>
-        <>
-          <div className="preview-flex">
-            <div>
-              <h1 className="name-title">{userName}</h1>
-              <p>{email}</p>
-              <p>{phoneNum}</p>
-              <p>{country}</p>
-            </div>
-            <button className="edit-btn" onClick={this.toggleEdit}>
+        <div className="preview-flex">
+          <div>
+            <h1 className="name-title">{userName}</h1>
+            <p>{email}</p>
+            <p>{phoneNum}</p>
+            <p>{country}</p>
+          </div>
+          {!editMode && (
+            <button className="edit-btn" onClick={toggleEdit}>
               Edit
             </button>
-          </div>
-        </>
-
-        {editMode && (
-          <>
-            <form>
-              <label htmlFor="userName">Name:</label>
-              <input
-                type="text"
-                name="userName"
-                placeholder="Name"
-                value={userName}
-                onChange={this.handleChange}
-              />
-              <label htmlFor="userName">Phone:</label>
-              <input
-                type="text"
-                name="phoneNum"
-                placeholder="Phone"
-                value={phoneNum}
-                onChange={this.handleChange}
-                onBlur={this.formatNum}
-              />
-              <label htmlFor="userName">Email:</label>
-              <input
-                type="email"
-                name="email"
-                placeholder="Email"
-                value={email}
-                onChange={this.handleChange}
-              />
-              <label htmlFor="userName">Country:</label>
-              <input
-                type="country"
-                name="country"
-                placeholder="Country"
-                value={country}
-                onChange={this.handleChange}
-              />
-              <button type="submit" onClick={this.toggleEdit}>
-                Save
-              </button>
-            </form>
-          </>
-        )}
+          )}
+        </div>
       </>
-    );
-  }
+
+      {editMode && (
+        <>
+          <form id="general-form">
+            <label htmlFor="userName">Name:</label>
+            <input
+              type="text"
+              name="userName"
+              placeholder="Name"
+              value={userName}
+              onChange={handleChange}
+            />
+            <label htmlFor="email">Email:</label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Email"
+              value={email}
+              onChange={handleChange}
+            />
+            <label htmlFor="phoneNum">Phone:</label>
+            <input
+              type="text"
+              name="phoneNum"
+              placeholder="Phone"
+              value={phoneNum}
+              onChange={handleChange}
+              onBlur={formatNum}
+            />
+            <label htmlFor="country">Country:</label>
+            <input
+              type="country"
+              name="country"
+              placeholder="Country"
+              value={country}
+              onChange={handleChange}
+            />
+          </form>
+          <button className="save-btn" form="general-form" onClick={toggleEdit}>
+            Save
+          </button>
+        </>
+      )}
+    </>
+  );
 }

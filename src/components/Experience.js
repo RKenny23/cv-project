@@ -1,140 +1,79 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import uniqid from 'uniqid';
 
-export default class Experience extends Component {
-  state = {
+export default function Experience(props) {
+  const [experienceInfo, setExperienceInfo] = useState({
+    id: uniqid(),
     company: '',
     title: '',
     tasks: '',
     startDate: '',
     endDate: '',
-    experience: [
-      {
-        id: uniqid(),
-        company: 'Awesome United',
-        title: 'Administrative Liason',
-        tasks: 'Prepare invoices, reports, memos, letters',
-        startDate: 'June 2012',
-        endDate: 'Nov 2018',
-      },
-    ],
-    editMode: false,
-  };
+  });
+  const [editMode, setEditMode] = useState(true);
 
-  handleChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setExperienceInfo((prevState) => {
+      return { ...prevState, [name]: value };
     });
   };
 
-  handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
-    this.setState({
-      experience: this.state.experience.concat({
-        id: uniqid(),
-        company: this.state.company,
-        title: this.state.title,
-        tasks: this.state.tasks,
-        startDate: this.state.startDate,
-        endDate: this.state.endDate,
-      }),
-      company: '',
-      title: '',
-      tasks: '',
-      startDate: '',
-      endDate: '',
-    });
-
-    this.toggleEdit();
-  };
-
-  toggleEdit = () => {
-    this.setState((prevState) => ({
-      editMode: !prevState.editMode,
-    }));
-  };
-
-  handleRemove = (id) => {
-    const filtered = this.state.experience.filter((exp) => exp.id !== id);
-
-    this.setState({
-      experience: filtered,
-    });
-  };
-
-  handleEdit = (id) => {
-    const filtered = this.state.experience.filter((exp) => exp.id !== id);
-
-    const selected = this.state.experience.find((exp) => exp.id === id);
-
-    this.setState({
-      experience: filtered,
-      id: id,
-      company: selected.company,
-      title: selected.title,
-      tasks: selected.tasks,
-      startDate: selected.startDate,
-      endDate: selected.endDate,
-      editMode: true,
-    });
-  };
-
-  componentDidMount() {
-    this.setState(JSON.parse(localStorage.getItem('formData')));
+    if (
+      !experienceInfo.company ||
+      !experienceInfo.title ||
+      !experienceInfo.tasks ||
+      !experienceInfo.startDate ||
+      !experienceInfo.endDate
+    ) {
+      alert('Please fill in all fields.');
+      return;
+    }
+    setEditMode((prevState) => !prevState);
   }
 
-  componentDidUpdate() {
-    localStorage.setItem('formData', JSON.stringify(this.state));
-  }
+  const { company, title, tasks, startDate, endDate } = experienceInfo;
 
-  render() {
-    const { company, title, tasks, startDate, endDate, experience, editMode } =
-      this.state;
+  const { id, handleDelete } = props;
 
-    return (
-      <>
-        <div class="new-section">
-          <h1 className="section-title">Experience:</h1>
-          <button className="add-btn" type="button" onClick={this.toggleEdit}>
-            +
-          </button>
+  return (
+    <>
+      {!editMode ? (
+        <div className="preview-flex">
+          <div className="school-info">
+            <h2 id="school-name">{company}</h2>
+            <p>{title}</p>
+            <p>{tasks}</p>
+            <p>
+              <i>
+                {startDate} - {endDate}
+              </i>
+            </p>
+          </div>
+          <div className="btn-group">
+            <button
+              className="edit-btn"
+              onClick={() => handleDelete('experienceIds', id)}
+            >
+              Delete
+            </button>
+            <button className="edit-btn" onClick={handleSubmit}>
+              Edit
+            </button>
+          </div>
         </div>
-        {experience.map((exp) => {
-          return (
-            <div className="preview-flex" key={exp.id}>
-              <div className="school-info">
-                <h2 id="school-name">{exp.company}</h2>
-                <p>{exp.title}</p>
-                <p>{exp.tasks}</p>
-                <p>
-                  {exp.startDate} - {exp.endDate}
-                </p>
-              </div>
-              <button
-                className="edit-btn"
-                onClick={() => this.handleEdit(exp.id)}
-              >
-                Edit
-              </button>
-              <button
-                className="edit-btn"
-                onClick={() => this.handleRemove(exp.id)}
-              >
-                Delete
-              </button>
-            </div>
-          );
-        })}
-
-        {editMode && (
-          <form>
+      ) : (
+        <>
+          <form id="edu-form">
             <label htmlFor="company">Company Name:</label>
             <input
               type="text"
               name="company"
               placeholder="Company Name"
               value={company}
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
             <label htmlFor="title">Title:</label>
             <input
@@ -142,7 +81,7 @@ export default class Experience extends Component {
               name="title"
               placeholder="title"
               value={title}
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
             <label htmlFor="tasks">Tasks:</label>
             <input
@@ -150,7 +89,7 @@ export default class Experience extends Component {
               name="tasks"
               placeholder="Tasks"
               value={tasks}
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
             <label htmlFor="startDate">Start Date</label>
             <input
@@ -158,7 +97,7 @@ export default class Experience extends Component {
               name="startDate"
               value={startDate}
               placeholder="Month &amp; Year"
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
             <label htmlFor="endDate">End Date</label>
             <input
@@ -166,17 +105,19 @@ export default class Experience extends Component {
               name="endDate"
               value={endDate}
               placeholder="Month &amp; Year"
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
-            <button type="submit" onClick={this.handleSubmit}>
-              Add Experience
-            </button>
-            <button type="button" onClick={this.toggleEdit}>
-              Close
-            </button>
           </form>
-        )}
-      </>
-    );
-  }
+          <button
+            className="save-btn"
+            type="submit"
+            form="edu-form"
+            onClick={handleSubmit}
+          >
+            Save
+          </button>
+        </>
+      )}
+    </>
+  );
 }

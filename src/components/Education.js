@@ -1,244 +1,99 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import uniqid from 'uniqid';
 
-export default class Education extends Component {
-  state = {
+export default function Education(props) {
+  const [educationInfo, setEducationInfo] = useState({
+    id: uniqid(),
     school: '',
     location: '',
     degree: '',
+    major: '',
     startDate: '',
     endDate: '',
-    education: [
-      {
-        id: uniqid(),
-        school: 'Great University',
-        location: 'Somewhere, U.S.A.',
-        degree: 'Web Development',
-        startDate: 'Sept 2008',
-        endDate: 'April 2012',
-      },
-    ],
-    editMode: false,
-  };
+  });
+  const [editMode, setEditMode] = useState(true);
 
-  handleChange = (e) => {
-    this.setState({
-      [e.target.name]: e.target.value,
+  const { id, handleDelete, edus, setEdus } = props;
+
+  // const [value, setValue] = React.useState(() => {
+  //   const stickyValue = window.localStorage.getItem(key);
+  //   return stickyValue !== null ? JSON.parse(stickyValue) : defaultValue;
+  // });
+
+  // useEffect(() => {
+  //   const data = JSON.parse(localStorage.getItem('educationList'));
+  //   if (data) {
+  //     setEdus(data);
+  //   }
+  // }, []);
+
+  useEffect(() => {
+    localStorage.setItem('educationList', JSON.stringify(edus));
+  }, [educationInfo]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setEducationInfo((prevState) => {
+      return { ...prevState, [name]: value };
     });
   };
 
-  handleSubmit = (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
-    this.setState({
-      education: this.state.education.concat({
-        id: uniqid(),
-        school: this.state.school,
-        location: this.state.location,
-        degree: this.state.degree,
-        startDate: this.state.startDate,
-        endDate: this.state.endDate,
-      }),
-      school: '',
-      location: '',
-      degree: '',
-      startDate: '',
-      endDate: '',
-    });
-
-    this.toggleEdit();
-  };
-
-  toggleEdit = () => {
-    this.setState((prevState) => ({
-      editMode: !prevState.editMode,
-    }));
-  };
-
-  handleRemove = (id) => {
-    const filtered = this.state.education.filter((edu) => edu.id !== id);
-
-    this.setState({
-      education: filtered,
-    });
-  };
-
-  handleSchoolEdit = (text, id) => {
-    const education = this.state.education;
-
-    education.map((edu) => {
-      if (edu.id === id) {
-        edu.school = text;
-      }
-      return education;
-    });
-
-    this.setState({
-      education,
-    });
-  };
-
-  handleLocationEdit = (text, id) => {
-    const education = this.state.education;
-
-    education.map((edu) => {
-      if (edu.id === id) {
-        edu.location = text;
-      }
-      return education;
-    });
-
-    this.setState({
-      education,
-    });
-  };
-
-  handleDegreeEdit = (text, id) => {
-    const education = this.state.education;
-
-    education.map((edu) => {
-      if (edu.id === id) {
-        edu.degree = text;
-      }
-      return education;
-    });
-
-    this.setState({
-      education,
-    });
-  };
-
-  handleStartDateEdit = (text, id) => {
-    const education = this.state.education;
-
-    education.map((edu) => {
-      if (edu.id === id) {
-        edu.startDate = text;
-      }
-      return education;
-    });
-
-    this.setState({
-      education,
-    });
-  };
-
-  handleEndDateEdit = (text, id) => {
-    const education = this.state.education;
-
-    education.map((edu) => {
-      if (edu.id === id) {
-        edu.endDate = text;
-      }
-      return education;
-    });
-
-    this.setState({
-      education,
-    });
-  };
-
-  componentDidMount() {
-    this.setState(JSON.parse(localStorage.getItem('formData')));
+    if (
+      !educationInfo.school ||
+      !educationInfo.location ||
+      !educationInfo.degree ||
+      !educationInfo.major ||
+      !educationInfo.startDate ||
+      !educationInfo.endDate
+    ) {
+      alert('Please fill in all fields.');
+      return;
+    }
+    setEditMode((prevState) => !prevState);
   }
 
-  componentDidUpdate() {
-    localStorage.setItem('formData', JSON.stringify(this.state));
-  }
+  const { school, location, degree, major, startDate, endDate } = educationInfo;
 
-  render() {
-    const {
-      school,
-      degree,
-      location,
-      startDate,
-      endDate,
-      education,
-      editMode,
-    } = this.state;
-
-    return (
-      <>
-        <div class="new-section">
-          <h1 className="section-title">Education:</h1>
-          <button className="add-btn" type="button" onClick={this.toggleEdit}>
-            +
-          </button>
+  return (
+    <>
+      {!editMode ? (
+        <div className="preview-flex">
+          <div className="school-info">
+            <h2 id="school-name">{school}</h2>
+            <p>{location}</p>
+            <p>
+              {degree} in {major}
+            </p>
+            <p>
+              <i>
+                {startDate} - {endDate}
+              </i>
+            </p>
+          </div>
+          <div className="btn-group">
+            <button
+              className="edit-btn"
+              onClick={() => handleDelete('educationIds', id)}
+            >
+              Delete
+            </button>
+            <button className="edit-btn" onClick={handleSubmit}>
+              Edit
+            </button>
+          </div>
         </div>
-        {education.map((edu) => {
-          return (
-            <div key={edu.id} className="preview-flex">
-              <div className="school-info">
-                <input
-                  id="school-name"
-                  type="text"
-                  value={edu.school}
-                  onChange={(e) =>
-                    this.handleSchoolEdit(e.target.value, edu.id)
-                  }
-                ></input>
-                <input
-                  className="school-details"
-                  type="text"
-                  value={edu.location}
-                  onChange={(e) =>
-                    this.handleLocationEdit(e.target.value, edu.id)
-                  }
-                ></input>
-                <input
-                  className="school-details"
-                  type="text"
-                  value={edu.degree}
-                  onChange={(e) =>
-                    this.handleDegreeEdit(e.target.value, edu.id)
-                  }
-                ></input>
-                {edu.startDate && (
-                  <div className="school-dates">
-                    <input
-                      className="school-details"
-                      type="text"
-                      value={edu.startDate}
-                      onChange={(e) =>
-                        this.handleStartDateEdit(e.target.value, edu.id)
-                      }
-                    ></input>
-                    <span>- </span>
-                    <input
-                      className="school-details"
-                      type="text"
-                      value={edu.endDate}
-                      onChange={(e) =>
-                        this.handleEndDateEdit(e.target.value, edu.id)
-                      }
-                    ></input>
-                  </div>
-                )}
-              </div>
-              {/* <button
-                className="edit-btn"
-                onClick={() => this.handleEdit(edu.id)}
-              >
-                Edit
-              </button> */}
-              <button
-                className="edit-btn"
-                onClick={() => this.handleRemove(edu.id)}
-              >
-                Delete
-              </button>
-            </div>
-          );
-        })}
-
-        {editMode && (
-          <form>
+      ) : (
+        <>
+          <form id="edu-form">
             <label htmlFor="school">School Name:</label>
             <input
               type="text"
               name="school"
               placeholder="School Name"
               value={school}
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
             <label htmlFor="location">Location:</label>
             <input
@@ -246,41 +101,53 @@ export default class Education extends Component {
               name="location"
               placeholder="Location"
               value={location}
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
+            <label htmlFor="degree">Degree:</label>
+            <select name="degree" onChange={handleChange}>
+              <option disabled selected value>
+                -- select an option --
+              </option>
+              <option value="Bachelor's">Bachelor's</option>
+              <option value="B.S.">B.S.</option>
+              <option value="Master's">Master's</option>
+              <option value="Doctorate">Doctorate</option>
+            </select>
             <label htmlFor="major">Major:</label>
             <input
               type="text"
-              name="degree"
-              placeholder="Degree"
-              value={degree}
-              onChange={this.handleChange}
+              name="major"
+              placeholder="Major"
+              value={major}
+              onChange={handleChange}
             />
-            <label htmlFor="startDate">Start Date</label>
+            <label htmlFor="startDate">Start Date:</label>
             <input
               type="text"
               name="startDate"
               value={startDate}
               placeholder="Month &amp; Year"
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
-            <label htmlFor="endDate">End Date</label>
+            <label htmlFor="endDate">End Date:</label>
             <input
               type="text"
               name="endDate"
               value={endDate}
               placeholder="Month &amp; Year"
-              onChange={this.handleChange}
+              onChange={handleChange}
             />
-            <button type="submit" onClick={this.handleSubmit}>
-              Add Education
-            </button>
-            <button type="button" onClick={this.toggleEdit}>
-              Close
-            </button>
           </form>
-        )}
-      </>
-    );
-  }
+          <button
+            className="save-btn"
+            type="submit"
+            form="edu-form"
+            onClick={handleSubmit}
+          >
+            Save
+          </button>
+        </>
+      )}
+    </>
+  );
 }

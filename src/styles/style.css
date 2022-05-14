@@ -3,26 +3,46 @@
 }
 
 body {
-  background-color: whitesmoke;
-  margin: 0;
+  background-color: rgb(2, 2, 88);
   font-family: "Inter", sans-serif;
 }
 
+
 .main-title {
   text-align: center;
+  color: white;
 }
 
-form {
-  display: flex;
-  flex-direction: column;
-  margin: 0 auto;
-  width: 200px;
+#general-form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
 }
 
-input {
+#general-form input {
+  margin-right: 2rem;
+}
+
+#edu-form {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  width: 700px;
+  margin-left: -1.5rem;
+}
+
+#edu-form input {
+  margin-right: 2rem;
+}
+
+input, select {
   padding: 0.5rem;
   margin: 1rem auto;
   width: 200px;
+}
+
+select {
+  margin-left: 0;
 }
 
 button {
@@ -47,6 +67,8 @@ button {
 .preview-flex {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  width: 650px;
 }
 
 .section-title {
@@ -54,13 +76,9 @@ button {
   margin: 1rem 0;
 }
 
-.school-title {
-  text-align: left;
-}
-
 .edit-btn {
   margin-left: 2rem;
-  float: right;
+  margin-right: 0;
 }
 
 .add-btn {
@@ -73,7 +91,7 @@ button {
 }
 
 .school-info {
-  margin: 1rem 2rem;
+  margin: 0 2rem;
 }
 
 .school-info input {
@@ -88,7 +106,7 @@ button {
 #school-name {
   font-size: 1.5rem;
   font-weight: bold;
-  margin-top: 0;
+  margin-top: 1rem;
 }
 
 .school-info input:focus {
@@ -101,7 +119,22 @@ button {
   margin: 0;
 }
 
-.new-section {
+.btn-group {
+  width: auto;
+}
+
+.save-btn {
+  display: block;
+  margin: 1rem auto;
+}
+
+.title-flex {
   display: flex;
   align-items: center;
+}
+
+.section-title {
+  margin: 1rem 0;
+  align-items: center;
+  display: flex;
 }
